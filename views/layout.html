@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <title>{{{block "title"}}}</title>
+	  <link rel="stylesheet" href="/css/bootstrap.css">
+		{{{block "stylesheets"}}}
+		
+		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="/js/bootstrap.js"></script>
+		{{{block "scripts"}}}
+	</head>
+
+	<body>
+	  <div class="container">
+	    {{{body}}}
+	  </div>
+	  
+	  
+	  {{{block "deferred_scripts"}}}
+	</body>
+</html>
