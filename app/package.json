@@ -22,7 +22,7 @@
     "hbs": "2.4.0",
     "uuid": "1.4.1",
     "sequelize": "2.0.0-beta.0",
-    "mysql": "2.0.0-alpha9",
+    "mysql": "2.0.0-alpha9"
   },
   "engines": {
     "node": ">=0.8"

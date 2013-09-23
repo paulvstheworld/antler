@@ -31,15 +31,6 @@ var http = require('http')
   , templateHelpers = require(__dirname + '/lib/helpers/template.js')
   , LoginValidator = require(__dirname + '/lib/validators/LoginValidator.js')
 
-User.find({ where:{id: 1} })
-  .success(function(user) {
-    if(user) {
-      console.log(user.values);
-    }
-  })
-
-
-templateHelpers.registerHelpers();
 
 app.configure(function() {
   app.set('port', process.env.PORT || 8080);
@@ -50,27 +41,50 @@ app.configure(function() {
   app.use(express.bodyParser());
 });
 
+// register hbs helpers
+templateHelpers.registerHelpers();
 
 
+/************* ROUTES *************/
 app.get('/', function(req, res, next) {
-  var sessionId = sessionHelpers.getSessionId(req);
-  
-  if(!sessionId) {
-    res.redirect('/login');
+  var sessionid = sessionHelpers.getSessionId(req);
+  if(sessionid) {
+    User.find({ where: { sessionid: sessionid}})
+      .success(function(user) {
+        if(user) {
+          return res.render('index');
+        }
+        else {
+          return res.redirect('/login');
+        }
+      });
   }
   else {
-    res.render('index');
+    return res.redirect('/login');
   }
-});
 
+  
+});
 
 app.get('/login', function(req, res) {
   var sessionid = sessionHelpers.getSessionId(req);
   if (sessionid){
-    res.redirect('/');
+    console.log(sessionid);
+    User.find({ where: { sessionid: sessionid}})
+      .success(function(user) {
+        if(user) {
+          return res.redirect('/');
+        }
+        else {
+          return res.render('login', { errors: JSON.stringify([])});
+        }
+      });
   }
-  return res.render('login', { errors: JSON.stringify([])});
+  else {
+    return res.render('login', { errors: JSON.stringify([])});
+  }
 });
+
 app.post('/login', function(req, res) {
   var sessionid = null;
   var email = req.body.email || '';
