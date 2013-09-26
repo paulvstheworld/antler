@@ -14,12 +14,22 @@
     (function($) {
       var $h1 = $('h1');
       var $guests = $('#guests');
+      var $modal = $('#myModal');
+      var $modalBody = $modal.find('.modal-body');
+      var $modalNo = $modal.find('#modalNo');
+      var $modalYes = $modal.find('#modalYes');
+      
       var userData = null;
       var isUserActive = null;
 
       var sessionid = $.cookie('sessionid');
       var socket = io.connect('http://localhost:8080');
       var users = {};
+      
+      var resetModal = function() {
+        $modal.data('connectionId', null);
+        $modalBody.html(null);
+      }
       
       socket.on('user.active', function (data) {
         var title = [data.firstname, ' ', data.lastname, '.'].join('');
@@ -49,8 +59,11 @@
         if ($guest.length > 0) {
           return;
         }
-        $guests.append(markup);
+        if ( userData && (userData.id === data.id)) {
+          return;
+        }
         
+        $guests.append(markup);
         console.log('guest.active');
         console.log(data);
       });
@@ -72,17 +85,55 @@
         // TODO @paul -- fill this out 
       });
       
-      socket.on('guest.connect.already', function(data) {
+      socket.on('connect.already', function(data) {
         // TODO @paul -- fill this out
-      })
+        console.log('connect.already');
+        console.log(data);
+        
+        alert('already connected to '+ data.firstname + ' ' + data.lastname + '.' +'!');
+      });
+      
+      socket.on('connect.request.send', function(data) {
+        console.log('connect.request.send');
+        console.log(data);
+        
+        var markup = [ 
+            'Would you like to connect with',
+            data.user.firstname,
+            data.user.lastname + '.',
+            '?'].join(' ');
+        
+        $modal.data('connectionId', data.connectionId);
+        $modalBody.html(markup);
+        $modal.modal('show');
+      });
+      
       
       $guests.delegate('.guest', 'click', function(evt) {
         var $target = $(evt.currentTarget);
         var guestId = $target.data('userid');
         
         socket.emit('connect.request', { id: guestId });
+        console.log('try to connect with user id=' + guestId);
       });
       
+      $modalNo.click(function(evt) {
+        resetModal();
+        $modal.modal('hide');
+      });
+      
+      $modalYes.click(function(evt) {
+        var connectionId = $modal.data('connectionId');
+        resetModal();
+        $modal.modal('hide');
+        
+        socket.emit('connect.request.confirm', {
+          userId: userData.id,  
+          connectionId: connectionId
+        });
+        
+        console.log('clicked on modal confirm for connection id=' + connectionId);
+      });
     })(jQuery);
   </script>
 {{/extend}}
@@ -99,3 +150,21 @@ h1 {
 
 <h1>Hello!</h1>
 <ul id="guests"></ul>
+
+<div id="myModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <p>One fine body&hellip;</p>
+      </div>
+      <div class="modal-footer">
+        <button id="modalNo" type="button" class="btn btn-default" data-dismiss="modal">No</button>
+        <button id="modalYes" type="button" class="btn btn-primary">Yes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

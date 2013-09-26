@@ -24,18 +24,25 @@ var http = require('http')
   })
   
   // models
-  , User = sequelize.import(__dirname + '/lib/models/User')
-  , Connection = sequelize.import(__dirname + '/lib/models/Connection')
+  , UserModel = sequelize.import(__dirname + '/lib/models/UserModel')
+  , ConnectionModel = sequelize.import(__dirname + '/lib/models/ConnectionModel')
+  
+  // classes
+  , User = require(__dirname + '/lib/classes/User')
+  , UserCollection = require(__dirname + '/lib/classes/UserCollection')
+  , SocketCollection = require(__dirname + '/lib/classes/SocketCollection')
   
   // helpers
   , sessionHelpers = require(__dirname + '/lib/helpers/session.js')
   , templateHelpers = require(__dirname + '/lib/helpers/template.js')
   , LoginValidator = require(__dirname + '/lib/validators/LoginValidator.js')
+  
 
 
-var INACTIVE_TIMEOUT = 1000 * 30; // 30 secs
-var usersBySocket = {};
+var INACTIVE_TIMEOUT = 1000 * 60; // 30 secs
 
+var userCollection = new UserCollection();
+var socketCollection = new SocketCollection();
 
 app.configure(function() {
   app.set('port', process.env.PORT || 8080);
@@ -54,7 +61,7 @@ templateHelpers.registerHelpers();
 app.get('/', function(req, res, next) {
   var sessionid = sessionHelpers.getSessionId(req);
   if(sessionid) {
-    User.find({ where: { sessionid: sessionid}})
+    UserModel.find({ where: { sessionid: sessionid}})
       .success(function(user) {
         if(user) {
           return res.render('index');
@@ -73,7 +80,7 @@ app.get('/login', function(req, res) {
   var sessionid = sessionHelpers.getSessionId(req);
   if (sessionid){
     console.log(sessionid);
-    User.find({ where: { sessionid: sessionid}})
+    UserModel.find({ where: { sessionid: sessionid}})
       .success(function(user) {
         if(user) {
           return res.redirect('/');
@@ -111,8 +118,8 @@ app.post('/login', function(req, res) {
     // set new session id
     sessionHelpers.setSessionId(sessionid, res);
     
-    // add user to database
-    User.find({
+    // update user info in DB
+    UserModel.find({
      where: {email:email} 
     }).success(function(user) {
       if(user) {
@@ -124,8 +131,9 @@ app.post('/login', function(req, res) {
           return res.redirect('/');
         })
       }
+      // add user to DB
       else {
-        User.create({
+        UserModel.create({
           email: email,
           firstname: firstname,
           lastname: lastinitial,
@@ -137,8 +145,6 @@ app.post('/login', function(req, res) {
     });
   }
 });
-
-
 
 
 // save session id to socket
@@ -165,62 +171,139 @@ io.set('authorization', function (data, accept) {
 io.sockets.on('connection', function(socket) {
   var sessionid = socket.handshake.sessionID;
   
-  User.find({where: {sessionid: sessionid}})
+  UserModel.find({where: {sessionid: sessionid}})
     .success(function(user) {
-      usersBySocket[socket.id] = user;
-      socket.emit('user.active', user.dataValues);
-      socket.broadcast.emit('guest.active', user.dataValues);
+      var allUsers = userCollection.getAllUsers();
+      var currUser = null;
+      var userObj = null;
       
+      // emit all previous users already in channel
+      for(var i=0, len=allUsers.length; i<len; i++) {
+        userObj = allUsers[i];
+        if(userObj.active) {
+          socket.emit('guest.active', userObj.getValues());
+        } 
+      }
+      
+      // add current user
+      currUser = new User(user, true);
+      userCollection.addUser(socket.id, currUser);
+      
+      // add current socket with user id
+      socketCollection.addSocket(user.id, socket);
+      
+      // emit and broadcast that a user is active!
+      socket.emit('user.active', currUser.getValues());
+      socket.broadcast.emit('guest.active', currUser.getValues());
+      
+      // set user to inactive
       setTimeout(function() {
-        socket.emit('user.inactive', user.dataValues);
-        socket.broadcast.emit('guest.inactive', user.dataValues);
+        currUser.active = false;
+        socket.emit('user.inactive', currUser.getValues());
+        socket.broadcast.emit('guest.inactive', currUser.getValues());
       }, INACTIVE_TIMEOUT);
     });
   
   socket.on('disconnect', function() {
     var name = '';
-    var user = usersBySocket[this.id];
-    
+    var user = userCollection.getUserBySocketID(this.id);
     if(user) {
       name = [user.firstname, user.lastname ].join(' ');
       this.broadcast.emit('guest.disconnected', user);
+      userCollection.removeUserBySocketID(this.id);
       
       console.log('sessionid = ' + name + ' has left');
-      delete usersBySocket[this.id];
+      
+      // remove socket object from the socketCollection
+      socketCollection.removeSocket(user.id);
     }
   });
   
+  socket.on('connect.request.confirm', function(data) {
+    ConnectionModel.find({where:[
+      '(id=? AND user_src_id=?) OR (id=? AND user_dest_id=?)',
+      data.connectionId, data.userId, data.connectionId, data.userId
+    ]}).success(function(connection) {
+      if(connection) {
+        connection.connected = true;
+        connection.save()
+          .success(function(connection) {
+            console.log('###########');
+            console.log('connection id=' + connection.id + ' connected=' + connection.connected);
+            console.log('###########');
+          });
+      }
+    });
+    
+    
+  })
+  
   // TODO finish this
   socket.on('connect.request', function(data) {
-    var user = usersBySocket[this.id];
+    var user = userCollection.getUserBySocketID(this.id);
     var guestID = data.id
     if(user) {
       console.log('user id=' + user.id + ' requests to be connected with ' + guestID);
       
-      
       //look up guest user
-      User.find({where: {id:guestID}})
+      UserModel.find({where: {id:guestID}})
         .success(function(guestUser) {
           if(guestUser) {
             console.log('found guest user');
-            // check if connect already exists (either forward or reverse connection)
-              // if there isn't a connection, send confirmation request to guest
-              // else notify the requested user that a conncetion has already been made
+            
+            ConnectionModel.find({where: [
+              '(user_src_id=? AND user_dest_id=?) OR (user_src_id=? AND user_dest_id=?)',
+              user.id, guestUser.id, guestUser.id, user.id
+            ]})
+              .success(function(connection) {
+                var guestSocket = null;
+                
+                if(connection) {
+                  if(connection.connected) {
+                    console.log('confirmed connection exists');
+                    
+                    // notify the requested user that a connection has already been made
+                    socket.emit('connect.already', guestUser.dataValues);
+                    console.log('connect.already');
+                  }
+                  else {
+                    console.log('unconfirmed connection exists');
+                    
+                    guestSocket = socketCollection.getSocketByUserId(guestID);
+                    guestSocket.emit('connect.request.send', {
+                      user: user,
+                      connectionId: connection.id
+                    });
+                  }
+                }
+                else {
+                  guestSocket = socketCollection.getSocketByUserId(guestID);
+                  
+                  ConnectionModel.create({
+                    user_src_id: user.id,
+                    user_dest_id: guestID
+                  }).success(function(connection) {
+                    guestSocket.emit('connect.request.send', {
+                      user: user,
+                      connectionId: connection.id
+                    });
+                    
+                    console.log(
+                      'created connection src=' + connection.user_src_id + ' dest=' + connection.user_dest_id);
+                  });
+                  
+                  console.log('should create connection for user id=' + user.id + ' and guest id=' + guestID);
+                }
+              })
           }
           else {
             // TODO -- tell requested user that the guest user no longer exists
             console.log('notify user that guest no longer exists'); 
           }
         });
-      
-      // check if connect already exists (either forward or reverse connection)
-      
-      // if there isn't a connection requests to be saved
-      // else notify the requested user that a connection has already been made
     }
   })
 });
-
 
 server.listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
