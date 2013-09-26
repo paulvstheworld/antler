@@ -17,6 +17,7 @@
     "url": "https://github.com/paulvstheworld/antler.git"
   },
   "dependencies": {
+    "cookie": "0.1.0",
     "express": "3.x",
     "socket.io": "0.9.16",
     "hbs": "2.4.0",
