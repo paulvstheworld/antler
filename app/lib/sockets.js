@@ -1,0 +1,151 @@
+var socketio = require('socket.io')
+  , cookie = require('cookie')
+  , Sequelize = require('sequelize')
+  
+  // models
+  , UserModel = sequelize.import(__dirname + '/models/UserModel')
+  , ConnectionModel = sequelize.import(__dirname + '/models/ConnectionModel') 
+  
+  // classes
+  , User = require(__dirname + '/classes/User')
+  , UserCollection = require(__dirname + '/classes/UserCollection')
+  , SocketCollection = require(__dirname + '/classes/SocketCollection')
+
+var INACTIVE_TIMEOUT = 1000 * 60; // 30 secs
+
+var userCollection = new UserCollection();
+var socketCollection = new SocketCollection();
+
+exports.socketServer = function (app, server) {
+  var io = socketio.listen(server);
+  
+  // make sure the headers have cookies with session id
+  io.set('authorization', function(data, accept) {
+    if (data.headers.cookie) {
+      data.cookie = cookie.parse(data.headers.cookie);
+      data.sessionID = data.cookie['sessionid'];
+    }
+    else {
+     // if there isn't, turn down the connection with a message and leave the function.
+     return accept('No cookie transmitted.', false);
+    }
+    
+    // accept the incoming connection
+    accept(null, true);
+  });
+  
+  
+  // on connection get user object (find or create)
+  io.sockets.on('connection', function (socket) {
+    var sessionID = socket.handshake.sessionID;
+    
+    // LOOK UP USER AND HANDLE CASES FROM HERE
+    UserModel.find({where: {sessionid:sessionID}})
+      .success(function(userModel) {
+        var allUsers = userCollection.getAllUsers();
+        var currUser = null;
+        var user = null;
+        
+        // emit all previous users already in channel
+        for(var i=0, len=allUsers.length; i<len; i++) {
+          user = allUsers[i];
+          if(user.active) {
+            socket.emit('guest.active', user.getValues());
+          }
+        }
+        
+        // add current user
+        currUser = new User(userModel, true);
+        userCollection.addUser(socket.id, currUser);
+        
+        // add current socket with user id
+        socketCollection.addSocket(userModel.id, socket);
+        
+        // emit and broadcast that a user is active!
+        socket.emit('user.active', currUser.getValues());
+        socket.broadcast.emit('guest.active', currUser.getValues());
+        
+        // set user to inactive
+        setTimeout(function() {
+          currUser.active = false;
+          socket.emit('user.inactive', currUser.getValues());
+          socket.broadcast.emit('guest.inacitve', currUser.getValues());
+        }, INACTIVE_TIMEOUT);
+      })
+      
+    socket.on('disconnect', function() {
+      var name = '';
+      var user = userCollection.getUserBySocketID(this.id);
+      if(user) {
+        name = [user.firstname, user.lastname].join(' ');
+        this.broadcast.emit('guest.disconnected', user);
+        
+        // remove user
+        userCollection.removeUserBySocketID(this.id);
+        
+        // remove user socket connection
+        socketCollection.removeSocket(user.id);
+        
+        console.log('user=' + name + ' has left');
+      }
+    });
+    
+    socket.on('connect.request', function(data) {
+      var user = userCollection.getUserBySocketID(this.id);
+      var guestID = data.id;
+      if(user) {
+        console.log('user id=' + user.id + ' requests to be connected with guest id=' + guestID);
+        
+        // lookup guest user
+        UserModel.find({where: {id:guestID}})
+          .success(function(guestUserModel) {
+            if(guestUserModel) {
+              console.log('found guest user');
+            }
+            
+            // lookup connection
+            ConnectionModel.find({where: [
+              '(user_src_id=? AND user_dest_id=?) OR (user_src_id=? AND user_dest_id=?)',
+              user.id, guestUserModel.id, guestUserModel.id, user.id
+            ]}).success(function(connection) {
+              var guestSocket = null;
+              
+              if(connection) {
+                if(connection.connected) {
+                  console.log('confirmed connection exits');
+                  
+                  // notify the requested user that a connection has already been made
+                  socket.emit('connection.already', guestUserModel.dataValues);
+                  console.log('connect.already');
+                }
+              }
+              
+            })
+          })
+      }
+    });
+    
+    
+    socket.on('connect.request.confirm', function(data) {
+      ConnectionModel.find({ where:[
+        '(id=? AND user_src_id=?) OR (id=? AND user_dest_id=?)',
+        data.connectionId, data.userId, data.connectionId, data.userId
+      ]}).success(function(connection) {
+        if(connection) {
+          connection.connected = true;
+          connection.save()
+            .success(function(connection) {
+              console.log('###########');
+              console.log('connection id=' + connection.id + ' connected=' + connection.connected);
+              console.log('###########');
+            })
+        }
+      })
+      // TODO -- fill this out
+    });
+    
+    
+  });
+  
+  
+};
