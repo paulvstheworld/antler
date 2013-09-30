@@ -2,6 +2,21 @@ var socketio = require('socket.io')
   , cookie = require('cookie')
   , Sequelize = require('sequelize')
   
+  
+  // database
+  , sequelize = new Sequelize('antler', 'root', null, {
+    dialect: 'mysql',
+    host: 'localhost',
+    port: 3306,
+    define: {
+        freezeTableName: true,
+        syncOnAssociation: true,
+        charset: 'utf8',
+        collate: 'utf8_general_ci',
+        timestamps: true
+      }
+  })
+  
   // models
   , UserModel = sequelize.import(__dirname + '/models/UserModel')
   , ConnectionModel = sequelize.import(__dirname + '/models/ConnectionModel') 
@@ -93,6 +108,7 @@ exports.socketServer = function (app, server) {
     socket.on('connect.request', function(data) {
       var user = userCollection.getUserBySocketID(this.id);
       var guestID = data.id;
+      
       if(user) {
         console.log('user id=' + user.id + ' requests to be connected with guest id=' + guestID);
         
@@ -110,14 +126,33 @@ exports.socketServer = function (app, server) {
             ]}).success(function(connection) {
               var guestSocket = null;
               
+              
               if(connection) {
                 if(connection.connected) {
                   console.log('confirmed connection exits');
                   
                   // notify the requested user that a connection has already been made
-                  socket.emit('connection.already', guestUserModel.dataValues);
+                  socket.emit('connect.already', guestUserModel.dataValues);
                   console.log('connect.already');
+                  return;
                 }
+                else {
+                  var guestSocket = socketCollection.getSocketByUserId(guestUserModel.id);
+                  guestSocket.emit('connect.request.send', {
+                    user: user, 
+                    connectionId: connection.id
+                  });
+                }
+              }
+              else {
+                ConnectionModel.create({
+                  user_src_id: user.id,
+                  user_dest_id: guestUserModel.id,
+                  emailed: false,
+                }).success(function(connection){
+                  var guestSocket = socketCollection.getSocketByUserId(guestUserModel.id);
+                  guestSocket.emit('connect.request.send', user);
+                }) 
               }
               
             })
@@ -135,13 +170,10 @@ exports.socketServer = function (app, server) {
           connection.connected = true;
           connection.save()
             .success(function(connection) {
-              console.log('###########');
               console.log('connection id=' + connection.id + ' connected=' + connection.connected);
-              console.log('###########');
             })
         }
       })
-      // TODO -- fill this out
     });
     
     

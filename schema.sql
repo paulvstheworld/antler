@@ -16,8 +16,8 @@ CREATE TABLE `connection` (
   `user_dest_id` integer NOT NULL,
   `createdAt` datetime,
   `updatedAt` datetime,
-  `connected` boolean default NULL,
-  `emailed` boolean NOT NULL default 0,
+  `connected` boolean DEFAULT NULL,
+  `emailed` boolean NOT NULL DEFAULT 0,
   UNIQUE(`user_src_id`, `user_dest_id`)
 );
 COMMIT;

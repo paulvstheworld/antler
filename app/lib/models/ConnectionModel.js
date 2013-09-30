@@ -4,7 +4,8 @@ module.exports = function(sequelize, DataTypes) {
     user_src_id: DataTypes.INTEGER,
     user_dest_id: DataTypes.INTEGER,
     createdAt: DataTypes.INTEGER,
-    updatedAt: DataTypes.INTEGER
-    // TOOD add in connected column here
+    updatedAt: DataTypes.INTEGER,
+    connected: DataTypes.BOOLEAN,
+    emailed: DataTypes.BOOLEAN
   })
 }
