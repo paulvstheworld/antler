@@ -84,10 +84,11 @@ exports.socketServer = function (app, server) {
         setTimeout(function() {
           currUser.active = false;
           socket.emit('user.inactive', currUser.getValues());
-          socket.broadcast.emit('guest.inacitve', currUser.getValues());
+          socket.broadcast.emit('guest.inactive', currUser.getValues());
         }, INACTIVE_TIMEOUT);
       })
-      
+    
+    
     socket.on('disconnect', function() {
       var name = '';
       var user = userCollection.getUserBySocketID(this.id);
@@ -104,6 +105,7 @@ exports.socketServer = function (app, server) {
         console.log('user=' + name + ' has left');
       }
     });
+    
     
     socket.on('connect.request', function(data) {
       var user = userCollection.getUserBySocketID(this.id);
