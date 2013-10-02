@@ -5,6 +5,7 @@ CREATE TABLE `user` (
   `lastname` varchar(255) NOT NULL,
   `email` varchar(200) NOT NULL,
   `sessionid` varchar(255) NOT NULL,
+  `image` varchar(255) DEFAULT '',
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   UNIQUE(`email`)

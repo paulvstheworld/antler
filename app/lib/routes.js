@@ -59,6 +59,26 @@ module.exports = function(app) {
       return res.render('login', { errors: JSON.stringify([])});
     }
   });
+  
+  app.get('/reconnect', function(req, res) {
+    var sessionid = sessionHelpers.getSessionId(req);
+    if (sessionid){
+      console.log(sessionid);
+      UserModel.find({ where: { sessionid: sessionid}})
+        .success(function(userModel) {
+          if(userModel) {
+            // render reconnect with user data
+            res.render('reconnect', {user: userModel.dataValues});
+          }
+          else {
+            return res.render('login', { errors: JSON.stringify([])});
+          }
+        });
+    }
+    else {
+      return res.render('login', { errors: JSON.stringify([])});
+    }
+  });
 
   
   app.post('/login', function(req, res) {
@@ -103,7 +123,8 @@ module.exports = function(app) {
             email: email,
             firstname: firstname,
             lastname: lastinitial,
-            sessionid: sessionid
+            sessionid: sessionid,
+            image: '',
           }).success(function() {
             return res.redirect('/');
           })

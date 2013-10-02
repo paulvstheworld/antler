@@ -1,3 +1,33 @@
-.guest_connect_button {
-  margin-left: 20px;
+button {
+  margin-left:20px;
+}
+
+.hide{
+  display:none;
+}
+
+ul {
+  list-style-type:none;
+  padding:0;
+}
+li {
+  padding: 20px;
+}
+
+.guest {
+  background-color: #fcc;
+  border: 1px solid #fff;
+}
+.guest.confirm {
+  background-color: #cfc;
+}
+
+.guest .guest_connect_button,
+.guest.confirm .guest_confirm_button {
+ display: inline-block; 
+}
+
+.guest.confirm .guest_connect_button,
+.guest .guest_confirm_button {
+  display: none;
 }

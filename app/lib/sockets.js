@@ -19,14 +19,14 @@ var socketio = require('socket.io')
   
   // models
   , UserModel = sequelize.import(__dirname + '/models/UserModel')
-  , ConnectionModel = sequelize.import(__dirname + '/models/ConnectionModel') 
+  , ConnectionModel = sequelize.import(__dirname + '/models/ConnectionModel')
   
   // classes
   , User = require(__dirname + '/classes/User')
   , UserCollection = require(__dirname + '/classes/UserCollection')
   , SocketCollection = require(__dirname + '/classes/SocketCollection')
 
-var INACTIVE_TIMEOUT = 1000 * 60; // 30 secs
+var INACTIVE_TIMEOUT = 1000 * 20; // 30 secs
 
 var userCollection = new UserCollection();
 var socketCollection = new SocketCollection();

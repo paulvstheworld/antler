@@ -1,11 +1,7 @@
 (function($) {
   var $h1 = $('h1');
   var $guests = $('#guests');
-  var $modal = $('#myModal');
   var $lonelyMsg = $('#lonelyMessage');
-  var $modalBody = $modal.find('.modal-body');
-  var $modalNo = $modal.find('#modalNo');
-  var $modalYes = $modal.find('#modalYes');
   
   var userData = null;
   var isUserActive = null;
@@ -15,14 +11,13 @@
   var socket = io.connect('http://localhost:8080');
   var users = {};
   
-  var resetModal = function() {
-    $modal.data('connectionId', null);
-    $modalBody.html(null);
-  }
-  
   var hasGuests = function() {
     return (guestCount > 0);
-  }
+  };
+  
+  var getGuestContainer = function(id) {
+    return $guests.find('[data-userid="'+ id +'"]');
+  };
   
   socket.on('user.active', function (data) {
     var title = [data.firstname, ' ', data.lastname, '.'].join('');
@@ -37,19 +32,23 @@
       .addClass('active');
   });
   
+  
   socket.on('user.inactive', function() {
     console.log('user.inactive');
     isUserActive = false;
-    $h1.removeClass('active');
+    
+    window.location.href = '/reconnect';
   });
+  
   
   socket.on('guest.active', function(data) {
     var guestName = [data.firstname, ' ', data.lastname].join('');
     var $guest = $guests.find('[data-userid="' + data.id + '"]');
-    var markup = ['<li class="guest" data-userid="', 
-      data.id, '">', 
+    var markup = ['<li class="guest" data-userid="', data.id, '">', 
       guestName, 
-      '<button class="guest_connect_button" type="button">Connect</button></li>'].join('');
+      '<button class="guest_connect_button" type="button">Connect</button>',
+      '<button class="guest_confirm_button hide" type="button">Confirm</button>',
+      '</li>'].join('');
     
     // check if the guest already exists before creating them on the DOM
     if ($guest.length > 0) {
@@ -67,6 +66,7 @@
     console.log(data);
   });
   
+  
   socket.on('guest.inactive', function(data) {
     var $guest = $guests.find('[data-userid="'+ data.id +'"]');
     $guest.remove();
@@ -80,6 +80,7 @@
     }
   });
   
+  
   socket.on('guest.disconnected', function(data){
     var $guest = $guests.find('[data-userid="'+ data.id +'"]');
     $guest.remove();
@@ -89,13 +90,15 @@
     // TODO @paul -- fill this out 
   });
   
+  
   socket.on('connect.already', function(data) {
     // TODO @paul -- fill this out
     console.log('connect.already');
     console.log(data);
     
-    alert('already connected to '+ data.firstname + ' ' + data.lastname + '.' +'!');
+    console.log('already connected to '+ data.firstname + ' ' + data.lastname + '.' +'!');
   });
+  
   
   socket.on('connect.request.send', function(data) {
     console.log('connect.request.send');
@@ -107,9 +110,10 @@
         data.user.lastname + '.',
         '?'].join(' ');
     
-    $modal.data('connectionId', data.connectionId);
-    $modalBody.html(markup);
-    $modal.modal('show');
+    var $guestContainer = getGuestContainer(data.user.id);
+    var $guestConfirmButton = $guestContainer.find('.guest_confirm_button').removeClass('hide');
+    $guestContainer.addClass('confirm')
+    $guestConfirmButton.data('connectionId', data.connectionId);
   });
   
   
@@ -117,26 +121,23 @@
     var $target = $(evt.currentTarget);
     var guestId = $target.parent('.guest').data('userid');
     
+    $target.text('Request Sent');
+    $target.attr('disabled', 'disabled');
+    
     socket.emit('connect.request', { id: guestId });
     console.log('try to connect with user id=' + guestId);
   });
   
-  $modalNo.click(function(evt) {
-    resetModal();
-    $modal.modal('hide');
-  });
   
-  $modalYes.click(function(evt) {
-    var connectionId = $modal.data('connectionId');
-    
-    resetModal();
-    $modal.modal('hide');
+  $guests.delegate('.guest_confirm_button', 'click', function(evt) {
+    var $target = $(evt.currentTarget);
+    var guestId = $target.parent('.guest').data('userid');
+    var connectionId = $target.data('connectionId');
     
     socket.emit('connect.request.confirm', {
       userId: userData.id,  
       connectionId: connectionId
     });
-    
-    console.log('clicked on modal confirm for connection id=' + connectionId);
   });
+  
 })(jQuery);
