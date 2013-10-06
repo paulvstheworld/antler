@@ -15,10 +15,10 @@ CREATE TABLE `connection` (
   `id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
   `user_src_id` integer NOT NULL,
   `user_dest_id` integer NOT NULL,
+  `emailed` boolean NOT NULL DEFAULT 0,
   `createdAt` datetime,
   `updatedAt` datetime,
   `connected` boolean DEFAULT NULL,
-  `emailed` boolean NOT NULL DEFAULT 0,
   UNIQUE(`user_src_id`, `user_dest_id`)
 );
 COMMIT;

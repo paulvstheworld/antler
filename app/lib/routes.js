@@ -3,6 +3,7 @@ var Sequelize = require('sequelize')
     dialect: 'mysql',
     host: 'localhost',
     port: 3306,
+    omitNull: true,
     define: {
         freezeTableName: true,
         syncOnAssociation: true,

@@ -19,6 +19,26 @@
     return $guests.find('[data-userid="'+ id +'"]');
   };
   
+  var removeGuestContainerClasses = function($guestContainer) {
+    $guestContainer.removeClass('alert-info alert-success alert-warning alert-danger');
+  }
+  
+  var setGuestConnected = function(id) {
+    var $guestContainer = $guests.find('[data-userid="'+ id +'"]');
+    removeGuestContainerClasses($guestContainer);
+    $guestContainer.addClass('alert-success');
+    $guestContainer.addClass('connected');
+  }
+  
+  var setGuestRequested = function(id, connectionId) {
+    var $guestContainer = getGuestContainer(id);
+    var $guestConfirmButton = $guestContainer.find('.guest_confirm_button')
+    removeGuestContainerClasses($guestContainer);
+    $guestContainer.addClass('alert-warning');
+    $guestContainer.addClass('confirm');
+    $guestConfirmButton.data('connectionId', connectionId);
+  }
+  
   socket.on('user.active', function (data) {
     var title = [data.firstname, ' ', data.lastname, '.'].join('');
     userData = data;
@@ -37,17 +57,18 @@
     console.log('user.inactive');
     isUserActive = false;
     
-    window.location.href = '/reconnect';
+    //window.location.href = '/reconnect';
   });
   
   
   socket.on('guest.active', function(data) {
     var guestName = [data.firstname, ' ', data.lastname].join('');
     var $guest = $guests.find('[data-userid="' + data.id + '"]');
-    var markup = ['<li class="guest" data-userid="', data.id, '">', 
+    var markup = ['<li class="guest alert-info" data-userid="', data.id, '">', 
       guestName, 
       '<button class="guest_connect_button" type="button">Connect</button>',
-      '<button class="guest_confirm_button hide" type="button">Confirm</button>',
+      '<button class="guest_confirm_button" type="button">Confirm</button>',
+      '<span class="check">&#x2713;</span>',
       '</li>'].join('');
     
     // check if the guest already exists before creating them on the DOM
@@ -92,9 +113,11 @@
   
   
   socket.on('connect.already', function(data) {
-    // TODO @paul -- fill this out
     console.log('connect.already');
     console.log(data);
+    // message showing already connected   
+    
+    setGuestConnected(data.id);
     
     console.log('already connected to '+ data.firstname + ' ' + data.lastname + '.' +'!');
   });
@@ -110,16 +133,20 @@
         data.user.lastname + '.',
         '?'].join(' ');
     
-    var $guestContainer = getGuestContainer(data.user.id);
-    var $guestConfirmButton = $guestContainer.find('.guest_confirm_button').removeClass('hide');
-    $guestContainer.addClass('confirm')
-    $guestConfirmButton.data('connectionId', data.connectionId);
+    setGuestRequested(data.user.id, data.connectionId);
   });
+  
+  socket.on('connect.request.confirmed', function(data) {
+    setGuestConnected(data.userId);
+  })
   
   
   $guests.delegate('.guest_connect_button', 'click', function(evt) {
     var $target = $(evt.currentTarget);
     var guestId = $target.parent('.guest').data('userid');
+    var $guestContainer = getGuestContainer(guestId);
+    removeGuestContainerClasses($guestContainer);
+    $guestContainer.addClass('alert-warning');
     
     $target.text('Request Sent');
     $target.attr('disabled', 'disabled');
@@ -133,6 +160,8 @@
     var $target = $(evt.currentTarget);
     var guestId = $target.parent('.guest').data('userid');
     var connectionId = $target.data('connectionId');
+    
+    console.log('confirming');
     
     socket.emit('connect.request.confirm', {
       userId: userData.id,  

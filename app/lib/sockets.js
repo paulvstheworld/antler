@@ -8,6 +8,7 @@ var socketio = require('socket.io')
     dialect: 'mysql',
     host: 'localhost',
     port: 3306,
+    omitNull: true,
     define: {
         freezeTableName: true,
         syncOnAssociation: true,
@@ -26,7 +27,7 @@ var socketio = require('socket.io')
   , UserCollection = require(__dirname + '/classes/UserCollection')
   , SocketCollection = require(__dirname + '/classes/SocketCollection')
 
-var INACTIVE_TIMEOUT = 1000 * 20; // 30 secs
+var INACTIVE_TIMEOUT = 1000 * 60 * 5; // 30 secs
 
 var userCollection = new UserCollection();
 var socketCollection = new SocketCollection();
@@ -128,15 +129,11 @@ exports.socketServer = function (app, server) {
             ]}).success(function(connection) {
               var guestSocket = null;
               
-              
               if(connection) {
                 if(connection.connected) {
-                  console.log('confirmed connection exits');
-                  
                   // notify the requested user that a connection has already been made
                   socket.emit('connect.already', guestUserModel.dataValues);
                   console.log('connect.already');
-                  return;
                 }
                 else {
                   var guestSocket = socketCollection.getSocketByUserId(guestUserModel.id);
@@ -152,8 +149,13 @@ exports.socketServer = function (app, server) {
                   user_dest_id: guestUserModel.id,
                   emailed: false,
                 }).success(function(connection){
+                  console.log(connection.values);
+                  
                   var guestSocket = socketCollection.getSocketByUserId(guestUserModel.id);
-                  guestSocket.emit('connect.request.send', user);
+                  guestSocket.emit('connect.request.send', {
+                    user: user,
+                    connectionId: connection.id
+                  });
                 }) 
               }
               
@@ -172,8 +174,33 @@ exports.socketServer = function (app, server) {
           connection.connected = true;
           connection.save()
             .success(function(connection) {
+              console.log('saved');
+              
+              var guestSocket = socketCollection.getSocketByUserId(connection.user_dest_id);
+              guestSocket.emit('connect.request.confirmed', {
+                connectionId: connection.id,
+                userId: connection.user_dest_id
+              });
+              guestSocket.emit('connect.request.confirmed', {
+                connectionId: connection.id,
+                userId: connection.user_src_id
+              });
+              
+              
+              socket.emit('connect.request.confirmed', {
+                connectionId: connection.id,
+                userId: connection.user_src_id
+              })
+              
+              socket.emit('connect.request.confirmed', {
+                connectionId: connection.id,
+                userId: connection.user_dest_id
+              })
               console.log('connection id=' + connection.id + ' connected=' + connection.connected);
             })
+        }
+        else {
+          // handle connection not found
         }
       })
     });

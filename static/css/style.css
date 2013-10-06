@@ -15,11 +15,7 @@ li {
 }
 
 .guest {
-  background-color: #fcc;
-  border: 1px solid #fff;
-}
-.guest.confirm {
-  background-color: #cfc;
+  border-radius: 5px;
 }
 
 .guest .guest_connect_button,
@@ -28,6 +24,16 @@ li {
 }
 
 .guest.confirm .guest_connect_button,
-.guest .guest_confirm_button {
+.guest .guest_confirm_button,
+.guest_connected {
   display: none;
+}
+
+.guest.connected .guest_connect_button,
+.guest.connected .guest_confirm_button {
+  display:none;
+}
+
+.guest.connected .check {
+  display: inline-block;
 }
