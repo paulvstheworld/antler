@@ -12,7 +12,10 @@
 {{#extend "deferred_scripts"}}
   <script src="/js/antler/main.js"></script>
   <script>
-  var connectionIds = {{connectionIds}};
+    var connectionIds = {{connectionIds}};
+    var INACTIVE_TIME = {{INACTIVE_TIME}};
+  
+    $('.progress-bar').animate({ width: "100%" }, INACTIVE_TIME);
   </script>
 {{/extend}}
 
@@ -26,7 +29,14 @@ h1 {
 }
 </style>
 
+
 <h1>Hello!</h1>
+
+<div class="progress">
+  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+  </div>
+</div>
+
 <ul id="guests"></ul>
 
 <div id="lonelyMessage">

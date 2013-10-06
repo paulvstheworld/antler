@@ -20,6 +20,11 @@ var Sequelize = require('sequelize')
   // helpers
   , sessionHelpers = require(__dirname + '/helpers/session.js')
   , LoginValidator = require(__dirname + '/validators/LoginValidator.js')
+  
+  // constants
+  , constants = require(__dirname + '/appConstants');
+
+var INACTIVE_TIMEOUT = constants.INACTIVE_TIMEOUT;
 
 
 module.exports = function(app) {
@@ -43,7 +48,10 @@ module.exports = function(app) {
                 connectionIds.push(otherUserID);
               }
               
-              return res.render('index', {connectionIds: JSON.stringify(connectionIds)});
+              return res.render('index', {
+                connectionIds: JSON.stringify(connectionIds),
+                INACTIVE_TIME: JSON.stringify(INACTIVE_TIMEOUT)
+              });
             });
           }
           else {

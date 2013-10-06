@@ -57,7 +57,7 @@
     console.log('user.inactive');
     isUserActive = false;
     
-    //window.location.href = '/reconnect';
+    window.location.href = '/reconnect';
   });
   
   
