@@ -14,8 +14,8 @@
   <script>
     var connectionIds = {{connectionIds}};
     var INACTIVE_TIME = {{INACTIVE_TIME}};
-  
-    $('.progress-bar').animate({ width: "100%" }, INACTIVE_TIME);
+    $('.progress-bar')
+      .animate({ width: "100%" }, INACTIVE_TIME);
   </script>
 {{/extend}}
 
