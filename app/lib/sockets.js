@@ -174,28 +174,18 @@ exports.socketServer = function (app, server) {
           connection.connected = true;
           connection.save()
             .success(function(connection) {
-              console.log('saved');
+              var destUserSocket = socketCollection.getSocketByUserId(connection.user_dest_id);
+              var srcUserSocket = socketCollection.getSocketByUserId(connection.user_src_id)
               
-              var guestSocket = socketCollection.getSocketByUserId(connection.user_dest_id);
-              guestSocket.emit('connect.request.confirmed', {
-                connectionId: connection.id,
-                userId: connection.user_dest_id
-              });
-              guestSocket.emit('connect.request.confirmed', {
+              destUserSocket.emit('connect.request.confirmed', {
                 connectionId: connection.id,
                 userId: connection.user_src_id
               });
               
-              
-              socket.emit('connect.request.confirmed', {
-                connectionId: connection.id,
-                userId: connection.user_src_id
-              })
-              
-              socket.emit('connect.request.confirmed', {
+              srcUserSocket.emit('connect.request.confirmed', {
                 connectionId: connection.id,
                 userId: connection.user_dest_id
-              })
+              });
               console.log('connection id=' + connection.id + ' connected=' + connection.connected);
             })
         }

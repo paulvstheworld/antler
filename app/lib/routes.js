@@ -15,7 +15,7 @@ var Sequelize = require('sequelize')
   
   // models
   , UserModel = sequelize.import(__dirname + '/models/UserModel')
-  
+  , ConnectionModel = sequelize.import(__dirname + '/models/ConnectionModel')
   
   // helpers
   , sessionHelpers = require(__dirname + '/helpers/session.js')
@@ -30,7 +30,21 @@ module.exports = function(app) {
       UserModel.find({ where: { sessionid: sessionid}})
         .success(function(user) {
           if(user) {
-            return res.render('index');
+            ConnectionModel.findAll({where:[
+              '(user_src_id=? OR user_dest_id=?) AND connected=true',
+              user.id, user.id
+            ]}).success(function(connections) {
+              var connectionIds = [];
+              var otherUser = null;
+              
+              for(var i=0, len=connections.length; i<len; i++) {
+                otherUserID = (user.id === connections[i].user_src_id) ? 
+                    connections[i].user_dest_id : connections[i].user_src_id; 
+                connectionIds.push(otherUserID);
+              }
+              
+              return res.render('index', {connectionIds: JSON.stringify(connectionIds)});
+            });
           }
           else {
             return res.redirect('/login');

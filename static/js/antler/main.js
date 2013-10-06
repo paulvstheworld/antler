@@ -80,7 +80,12 @@
     }
     
     guestCount++;
-    $guests.append(markup);    
+    $guests.append(markup);
+    
+    if( $.inArray(data.id, connectionIds) >= 0 ) {
+      setGuestConnected(data.id)
+    }
+        
     $lonelyMsg.fadeOut();
     
     console.log('guest.active');
@@ -137,6 +142,7 @@
   });
   
   socket.on('connect.request.confirmed', function(data) {
+    connectionIds.push(data.userId);
     setGuestConnected(data.userId);
   })
   
@@ -160,8 +166,6 @@
     var $target = $(evt.currentTarget);
     var guestId = $target.parent('.guest').data('userid');
     var connectionId = $target.data('connectionId');
-    
-    console.log('confirming');
     
     socket.emit('connect.request.confirm', {
       userId: userData.id,  
