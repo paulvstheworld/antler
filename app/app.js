@@ -7,13 +7,15 @@ var http = require('http')
   , app = express()
   , routes = require(__dirname + '/lib/routes')
   , sockets = require(__dirname + '/lib/sockets')
-  , server = http.createServer(app).listen(8080, function () {
+  , server = http.createServer(app).listen(8080, '0.0.0.0', function () {
       var addr = server.address();
       console.log('Express server listening on http://' + addr.address + ':' + addr.port);
   })
   
   // helpers
   , templateHelpers = require(__dirname + '/lib/helpers/template.js')
+
+
 
 
 app.configure(function() {

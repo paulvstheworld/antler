@@ -1,6 +1,6 @@
 
 
-<form role="form" action="/login" method="post">
+<form role="form" action="/login" method="post" enctype="multipart/form-data">
   <ul id="errors"></ul>
   <div class="form-group">
     <label for="email">Email</label>
@@ -18,6 +18,9 @@
       </div>
     </div>
   </div>
+  
+  <input type="file" name="imgpic" accept="image/*" capture="camera">
+  
   <button type="submit" class="btn btn-default">Submit</button>
 </form>
 

@@ -8,7 +8,7 @@
   var guestCount = 0;
 
   var sessionid = $.cookie('sessionid');
-  var socket = io.connect('http://localhost:8080');
+  var socket = io.connect('http://192.168.11.8:8080');
   var users = {};
   
   var hasGuests = function() {
@@ -40,7 +40,7 @@
   }
   
   socket.on('user.active', function (data) {
-    var title = [data.firstname, ' ', data.lastname, '.'].join('');
+    var markup = [data.firstname, ' ', data.lastname, '.', '<img id="profile" src="/uploads/'+ data.image +'" />'].join('');
     userData = data;
     isUserActive = true;
     
@@ -48,7 +48,7 @@
     console.log(data);
     
     $h1
-      .html(title)
+      .html(markup)
       .addClass('active');
   });
   

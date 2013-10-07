@@ -63,7 +63,7 @@ exports.socketServer = function (app, server) {
     // LOOK UP USER AND HANDLE CASES FROM HERE
     UserModel.find({
         where: {sessionid:sessionID}, 
-        attributes:['id', 'firstname', 'lastname']
+        attributes:['id', 'firstname', 'lastname', 'image']
     })
     .success(function(userModel) {
       var allUsers = userCollection.getAllUsers();
@@ -94,6 +94,8 @@ exports.socketServer = function (app, server) {
         currUser.active = false;
         socket.emit('user.inactive', currUser.getValues());
         socket.broadcast.emit('guest.inactive', currUser.getValues());
+        
+        delete timeouts[userModel.id];
       }, INACTIVE_TIMEOUT);
     })
     
@@ -104,9 +106,9 @@ exports.socketServer = function (app, server) {
       if(user) {
         name = [user.firstname, user.lastname].join(' ');
         this.broadcast.emit('guest.disconnected', user);
-        
         // clearTimeout
         clearTimeout(timeouts[user.id])
+        delete timeouts[user.id];
         
         // remove user
         userCollection.removeUserBySocketID(this.id);

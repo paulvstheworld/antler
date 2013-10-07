@@ -1,4 +1,6 @@
-var Sequelize = require('sequelize')
+var fs = require('fs')
+  , uuid = require('uuid')
+  , Sequelize = require('sequelize')
   , sequelize = new Sequelize('antler', 'root', null, {
     dialect: 'mysql',
     host: 'localhost',
@@ -25,7 +27,6 @@ var Sequelize = require('sequelize')
   , constants = require(__dirname + '/appConstants');
 
 var INACTIVE_TIMEOUT = constants.INACTIVE_TIMEOUT;
-
 
 module.exports = function(app) {
   /************* ROUTES *************/
@@ -126,34 +127,68 @@ module.exports = function(app) {
       sessionid = sessionHelpers.getNewSessionid();
       // set new session id
       sessionHelpers.setSessionId(sessionid, res);
-
-      // update user info in DB
+      
       UserModel.find({
-       where: {email:email} 
+        where: {email:email}
       }).success(function(user) {
-        if(user) {
-          user.updateAttributes({
-            firstname: firstname,
-            lastname: lastinitial,
-            sessionid: sessionid
-          }).success(function() {
-            return res.redirect('/');
-          })
-        }
-        // add user to DB
-        else {
-          UserModel.create({
-            email: email,
-            firstname: firstname,
-            lastname: lastinitial,
-            sessionid: sessionid,
-            image: '',
-          }).success(function() {
-            return res.redirect('/');
-          })
-        }
-      });
-    }
-  });
+        var imgname = uuid.v4() + '.jpg';
+        
+        fs.readFile(req.files.imgpic.path, function (err, data) {
+          var newPath = [__dirname, "/../../static/uploads/", imgname].join('');
+          
+          if(data.length > 0) {
+            fs.writeFile(newPath, data, function (err) {
+              if(user) {
+                user.updateAttributes({
+                  firstname: firstname,
+                  lastname: lastinitial,
+                  sessionid: sessionid,
+                  image: imgname,
+                }).success(function() {
+                  return res.redirect('/');
+                })
+              }
+              // add user to DB
+              else {
+                UserModel.create({
+                  email: email,
+                  firstname: firstname,
+                  lastname: lastinitial,
+                  sessionid: sessionid,
+                  image: imgname,
+                }).success(function() {
+                  return res.redirect('/');
+                })
+              }
+            });// end writeFile
+          }
+          else {
+            if(user) {
+              user.updateAttributes({
+                firstname: firstname,
+                lastname: lastinitial,
+                sessionid: sessionid,
+              }).success(function() {
+                return res.redirect('/');
+              })
+            }
+            // add user to DB
+            else {
+              UserModel.create({
+                email: email,
+                firstname: firstname,
+                lastname: lastinitial,
+                sessionid: sessionid,
+                image: '',
+              }).success(function() {
+                return res.redirect('/');
+              })
+            }
+          }
+        }); // end readFile
+        
+      }); // end success
+    } // end else
+  }); // end POST
   
 }
