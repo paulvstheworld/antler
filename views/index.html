@@ -19,11 +19,13 @@
   </script>
 {{/extend}}
 
+{{#extend "fonts"}}
+  	<link href='http://fonts.googleapis.com/css?family=Raleway:800,600,400,300,200' rel='stylesheet' type='text/css'>
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+{{/extend}}
+
 <style>
-h1 {
-  background-color: #ccf;
-  padding: 10px;
-}
+
 .guest_connect {
   margin-left: 30px;
 }
@@ -40,5 +42,8 @@ h1 {
 <ul id="guests"></ul>
 
 <div id="lonelyMessage">
-  <p>Nobody is around</p>
+  	<h2>This is sad, but nobody is around.</h2>
+	<p class="details">
+		<a href="#detail_content">Reconnect<br/><i class="icon-refresh"></i></a>
 </div>
+

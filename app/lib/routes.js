@@ -56,14 +56,34 @@ module.exports = function(app) {
             });
           }
           else {
-            return res.redirect('/login');
+            return res.redirect('/intro');
           }
         });
     }
     else {
-      return res.redirect('/login');
+      return res.redirect('/intro');
     }
   });
+  
+  app.get('/intro', function(req, res) {
+    var sessionid = sessionHelpers.getSessionId(req);
+    if (sessionid){
+      console.log(sessionid);
+      UserModel.find({ where: { sessionid: sessionid}})
+        .success(function(user) {
+          if(user) {
+            return res.redirect('/');
+          }
+          else {
+            return res.render('intro', { errors: JSON.stringify([])});
+          }
+        });
+    }
+    else {
+      return res.render('intro', { errors: JSON.stringify([])});
+    }
+  });
+
   
   app.get('/login', function(req, res) {
     var sessionid = sessionHelpers.getSessionId(req);

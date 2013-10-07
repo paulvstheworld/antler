@@ -1,29 +1,53 @@
+{{#extend "title"}}log in to antler.io{{/extend}}
+
+{{#extend "stylesheets"}}
+	<link rel='stylesheet' href='/css/style.css'>	
+{{/extend}}
+
+{{#extend "fonts"}}
+	<link href='http://fonts.googleapis.com/css?family=Raleway:800,600,400,300,200' rel='stylesheet' type='text/css'>
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+{{/extend}}
+
+<div class="header_bar" style="text-align:center;padding:45px 0;">
+	<img width="40" class="headshot" src="/img/antler-white-logo.svg" /><br/>
+	antler.io
+</div>
+
+
+
+<div class="intro">
+
+<h2>We need just a few details to get started.</h2>
 
 
 <form role="form" action="/login" method="post" enctype="multipart/form-data">
   <ul id="errors"></ul>
   <div class="form-group">
     <label for="email">Email</label>
-    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" value="{{email}}">
+    <input type="email" class="form-control" id="email" name="email" placeholder="Your email" value="{{email}}">
   </div>
   <div class="form-group">
     <div class="row">
-      <div class="col-xs-9">
+      <div class="col-xs-8">
         <label for="firstname">First name</label>
-        <input type="text" class="form-control" id="firstname" name="firstname" placeholder="First name" value="{{firstname}}">
+        <input type="text" class="form-control" id="firstname" name="firstname" placeholder="First Name" value="{{firstname}}">
       </div>
-      <div class="col-xs-3">
+      <div class="col-xs-4">
         <label for="lastinitial">Last initial</label>
         <input type="text" class="form-control" id="lastinitial" name="lastinitial" placeholder="Initial" maxlength="1" value="{{lastinitial}}">
       </div>
     </div>
   </div>
-  
-  <input type="file" name="imgpic" accept="image/*" capture="camera">
-  
-  <button type="submit" class="btn btn-default">Submit</button>
-</form>
 
+<label for="lastinitial">Your picture</label>
+<div id="pic_upload">  
+	<input type="file" name="imgpic" accept="image/*" capture="camera">
+</div>
+ 
+  <button type="submit" class="btn btn-default link_button action_button">Submit</button>
+</form>
+ </div>
 {{#extend "deferred_scripts"}}
   <script>
     var $errors = $('#errors');
@@ -32,8 +56,20 @@
 
     for(var i=0, len=errors.length; i<len; i++) {
       markup = ['<li>', errors[i].msg ,'</li>'].join('');
+      $("#"+errors[i].field).addClass('error_field');
     }
     
     $errors.html(markup);
+
+	var isPicImpossible = function() {
+		var element = document.createElement("input");
+		element.setAttribute("type", "file");
+		return element.disabled;
+	}		
+
+	if(isPicImpossible()){
+		$("#pic_upload").html("<span class=\"error\">Uh oh! Looks like your browser cannot upload images.</span>");
+	}
+	
   </script>
 {{/extend}}

@@ -8,7 +8,7 @@
   var guestCount = 0;
 
   var sessionid = $.cookie('sessionid');
-  var socket = io.connect('http://192.168.11.8:8080');
+  var socket = io.connect('http://192.168.11.72:8080');
   var users = {};
   
   var hasGuests = function() {
@@ -38,9 +38,12 @@
     $guestContainer.addClass('confirm');
     $guestConfirmButton.data('connectionId', connectionId);
   }
+
+
   
   socket.on('user.active', function (data) {
-    var markup = [data.firstname, ' ', data.lastname, '.', '<img id="profile" src="/uploads/'+ data.image +'" />'].join('');
+	var my_title = ['Hi ', data.firstname].join('');
+    var headshot = ['<img id="profile" class="headshot" src="/uploads/'+ data.image +'" />'].join('');
     userData = data;
     isUserActive = true;
     
@@ -48,7 +51,7 @@
     console.log(data);
     
     $h1
-      .html(markup)
+      .html(headshot + my_title)
       .addClass('active');
   });
   
@@ -63,12 +66,14 @@
   
   socket.on('guest.active', function(data) {
     var guestName = [data.firstname, ' ', data.lastname].join('');
-    var $guest = $guests.find('[data-userid="' + data.id + '"]');
-    var markup = ['<li class="guest alert-info" data-userid="', data.id, '">', 
+    var headshot = ['<img class="headshot" src="/uploads/',data.image,'"/>'].join('');
+	var $guest = $guests.find('[data-userid="' + data.id + '"]');
+    var markup = ['<li class="guest alert-info guest_connect_item" data-userid="', data.id, '">', 
+      headshot,
       guestName, 
       '<button class="guest_connect_button" type="button">Connect</button>',
-      '<button class="guest_confirm_button" type="button">Confirm</button>',
-      '<span class="check">&#x2713;</span>',
+      '<button class="guest_confirm_button" type="button">Accept</button>',
+//      '<span class="check">&#x2713;</span>',
       '</li>'].join('');
     
     // check if the guest already exists before creating them on the DOM
@@ -154,7 +159,7 @@
     removeGuestContainerClasses($guestContainer);
     $guestContainer.addClass('alert-warning');
     
-    $target.text('Request Sent');
+    $target.text('Waiting...');
     $target.attr('disabled', 'disabled');
     
     socket.emit('connect.request', { id: guestId });
