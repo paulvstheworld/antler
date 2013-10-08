@@ -4,7 +4,7 @@ var socketio = require('socket.io')
   
   
   // database
-  , sequelize = new Sequelize('antler', 'root', null, {
+  , sequelize = new Sequelize('antlerio_antlerdb', 'antlerio_dbadmin', 'Take8a8stab8at8beersDB', {
     dialect: 'mysql',
     host: 'localhost',
     port: 3306,

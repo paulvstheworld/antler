@@ -1,3 +1,169 @@
+/* == antler.io ==*/
+/* 
+
+you cheeky bastid.
+
+*/
+
+
+/* == globals ==*/
+
+body{
+	background-color: #efefef;
+	font:400 1.2em/1.2em "Raleway";
+	text-align:center;
+	}
+
+a{
+	color: rgba(33,194,244,1);
+	}
+	
+a:hover, a:visited{
+	text-decoration:none;
+	}
+	
+ol,form{
+	text-align: left;
+	}
+
+/* == hx ==*/
+
+h1{
+	background-color:#515151;
+	color:#fff;
+	font:600 1.8em/.8em "Raleway";
+	margin:0;
+	padding:.4em 0;
+	text-align:left;
+	}	
+
+h2{
+	color:#222;
+	font:600 1.5em/1.2em "Raleway";
+	margin:1.3em 0;
+	padding:.3em 0;
+	text-align:center;
+	}
+
+/* == structure ==*/
+
+.container,
+.intro,
+.footer {
+	width:100%;	
+	padding:0;	
+	}
+
+.intro,
+.footer{
+	padding:0 5%;
+	}
+	
+.footer{
+	border-top:1px solid #a1a1a1;
+	margin:5em 0 2em;
+	padding:1em 0;
+	}
+
+/* == people ==*/
+
+.header_bar{
+	background-color:#515151;
+	color:#fff;
+	font:600 1.5em/.8em "Raleway";
+	margin:0;
+	padding:.4em 0;
+	text-align:left;
+	}
+	
+li{
+	padding:.7em .6em;
+	}
+
+/* == people ==*/
+
+.headshot{
+	width: 50px;
+	height:50px;
+	border-radius: 25px;
+	margin:0 .4em;
+	}
+
+
+/* == content ==*/
+
+.actions{
+	font:600 1.2em/1.2em "Raleway";
+	margin:40px auto;
+	}
+	
+.link_button{
+	font:600 1.2em/.8em "Raleway";
+	background-color:rgba(33,194,244,1);
+	border-radius:5px;
+	padding:.7em .8em .7em;
+	margin:2.5em auto;
+	border:none;
+	color:#fff;
+	text-align:center;
+	display:block;
+	width:8em;
+	}
+	
+button{
+	background-color:rgba(168,204,17,1);
+	}
+
+
+#detail_content{
+	font:600 1.2em/1.2em "Raleway";
+	margin:6em 0 0;
+	padding:2em 0;
+	border-top:1px solid #a1a1a1;
+	}
+
+
+/* == forms ==*/
+
+.error{
+	color:#B42F30;
+	}
+	
+.error_field{
+	background-color:rgba(180,47,48,.1)
+	}
+
+
+/* == cleaned above ====================================================
+
+
+.guest {
+	border-radius: 5px;
+	}
+
+.guest .guest_connect_button,
+.guest.confirm .guest_confirm_button {
+	display: inline-block; 
+	float:right;
+	}
+
+.guest.confirm .guest_connect_button,
+.guest .guest_confirm_button,
+.guest_connected {
+	display: none;
+	}
+
+.guest.connected .guest_connect_button,
+.guest.connected .guest_confirm_button {
+	display:none;
+	}
+
+.guest.connected .check {
+	display: inline-block;
+	}
+
+
+
 button {
   margin-left:20px;
 }
@@ -14,9 +180,6 @@ li {
 
 
 
-.hide{
-  display:none;
-}
 
 .guest {
   border-radius: 5px;
@@ -51,18 +214,16 @@ li {
   border-radius: 25px;
 }
 
-/* == ak added ====================================================*/
-
-body{
-	background-color: #efefef;
-	font-family: "Raleway", sans-serif;
-
-}
-
-.container{
-	width:100%;	
-	padding:0;	
+.headshot{
+	width: 50px;
+	height:50px;
+	border-radius: 25px;
+	margin:0 .4em;
 	}
+
+/* == ak added ====================================================
+
+
 	
 .intro{
 	width:100%;	
@@ -70,10 +231,7 @@ body{
 	
 }
 	
-li{
-	padding:.7em .6em;
-	
-}
+
 	
 .header_bar{
 	background-color:#515151;
@@ -92,47 +250,17 @@ li{
 	text-align:left;
 	}	
 	
-	
-	h1{
-		background-color: rgba(220,230,240,1);
-		color:#222;
 
-		background-color:#515151;
-		color:#fff;
-		font:600 1.5em/.8em "Raleway";
-		margin:0;
-		padding:.4em 0;
-		text-align:left;
-		}
 		
-		h2{
-			color:#222;
-			font:600 1.5em/1.2em "Raleway";
-			margin:1.3em 0;
-			padding:.3em 0;
-			text-align:center;
-			}
+		
 
-button,.link_button{
-	font:600 1.2em/.8em "Raleway";
-	background-color:rgba(168,204,17,1);
-	border-radius:5px;
-	padding:.7em .8em .7em;
-	margin:.5em auto;
-	border:none;
-	color:#fff;
-	text-align:center;
-	display:block;
-	width:8em;
-}
+button,
 
 h1 button,li .link_button{
 	font:600 .6em/.8em "Raleway";
 }
 
-button.guest_connect_button, .action_button{
-	background-color:rgba(33,194,244,1);
-}
+
 
 button.guest_connect_button, button.guest_confirm_button, .header_bar .action_button{
 	float:right;
@@ -164,13 +292,7 @@ button.guest_connect_button, button.guest_confirm_button, .header_bar .action_bu
 	border-color: #d6e9c6;
 	}
 
-	a{
-		color: rgba(33,194,244,1);
-		}
-		
-		a:hover, a:visited{
-			text-decoration:none;
-			}
+	
 
 hr{
 	border-top:1px solid #a1a1a1;
@@ -178,19 +300,9 @@ hr{
 }
 
 
-.details{
-		font:600 1.2em/1.2em "Raleway";
-	margin:40px auto 0;
-	text-align:center;
-}
 
-#detail_content{
-		margin:6em 0 0;
-		padding:2em 0;
-		border-top:1px solid #a1a1a1;
-		font:600 1.2em/1.2em "Raleway";
-	
-}
+
+
 
 .progress {
 height: 5px;
@@ -229,8 +341,8 @@ transition: width 0.6s ease;
 	background-color:rgba(180,47,48,.1)
 	}
 	
-	
-	
-	
-	
+/*------------------------------
+
+.hide{
+  display:none;
 }

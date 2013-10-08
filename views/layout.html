@@ -2,25 +2,38 @@
 <html>
 	<head>
 	  <title>{{{block "title"}}}</title>
-	  <link rel="stylesheet" href="/css/bootstrap.css">
-	  
-	  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	  
+	
+	  	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	  	
+	  	<link rel="stylesheet" href="/css/bootstrap.css">
+	  	<link rel='stylesheet' href='/css/style.css'>
 		{{{block "stylesheets"}}}
 		
-    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 		<script src="/js/bootstrap.js"></script>
+		<script src="/js/socket.io/socket.io.js"></script>
+		<script src="/js/plugins/jquery-cookie.js"></script>
 		{{{block "scripts"}}}
 		
+		<link href='http://fonts.googleapis.com/css?family=Raleway:800,600,400,300,200' rel='stylesheet' type='text/css'>
+		
+		<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 		{{{block "fonts"}}}
+		
 	</head>
 
 	<body>
 	  <div class="container">
 	    {{{body}}}
+	  
+	  	<div class="footer">
+	  		Need help? Email us at <a href="mailto:help@antler.io">help@antler.io</a>.
+	  	</div>
+	  	{{{block "footer"}}}
+	  
 	  </div>
 	  
-	  
 	  {{{block "deferred_scripts"}}}
+	  
 	</body>
 </html>

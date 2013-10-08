@@ -1,14 +1,5 @@
 {{#extend "title"}}Antler{{/extend}}
 
-{{#extend "stylesheets"}}
-  <link rel='stylesheet' href='/css/style.css'>
-{{/extend}}
-
-{{#extend "scripts"}}
-  <script src="/js/socket.io/socket.io.js"></script>
-  <script src="/js/plugins/jquery-cookie.js"></script>
-{{/extend}}
-
 {{#extend "deferred_scripts"}}
   <script src="/js/antler/main.js"></script>
   <script>
@@ -18,19 +9,6 @@
       .animate({ width: "100%" }, INACTIVE_TIME);
   </script>
 {{/extend}}
-
-{{#extend "fonts"}}
-  	<link href='http://fonts.googleapis.com/css?family=Raleway:800,600,400,300,200' rel='stylesheet' type='text/css'>
-	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-{{/extend}}
-
-<style>
-
-.guest_connect {
-  margin-left: 30px;
-}
-</style>
-
 
 <h1>Hello!</h1>
 
@@ -42,8 +20,6 @@
 <ul id="guests"></ul>
 
 <div id="lonelyMessage">
-  	<h2>This is sad, but nobody is around.</h2>
-	<p class="details">
-		<a href="#detail_content">Reconnect<br/><i class="icon-refresh"></i></a>
+  	<h2>This is sad, but nobody is around right now.</h2>
+  	<h2>Next new person you meet, send them to http://antler.io</h2>
 </div>
-

@@ -8,7 +8,7 @@
   var guestCount = 0;
 
   var sessionid = $.cookie('sessionid');
-  var socket = io.connect('http://192.168.11.72:8080');
+  var socket = io.connect('http://antler.io:8013');
   var users = {};
   
   var hasGuests = function() {

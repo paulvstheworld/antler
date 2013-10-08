@@ -1,40 +1,31 @@
-{{#extend "title"}}welcome to antler.io{{/extend}}
-
-{{#extend "stylesheets"}}
-	<link rel='stylesheet' href='/css/style.css'>	
-{{/extend}}
-
-{{#extend "fonts"}}
-	<link href='http://fonts.googleapis.com/css?family=Raleway:800,600,400,300,200' rel='stylesheet' type='text/css'>
-	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-{{/extend}}
-
-<div class="header_bar" style="text-align:center;padding:45px 0;">
-	<img width="40" class="headshot" src="/img/antler-white-logo.svg" /><br/>
-	antler.io
-</div>
-
-
-
-<div class="intro">
-
-	<h2>Quickly connect with the people around you & get reminded about it later.</h2>
-
-	<a class="link_button action_button" href="/login">Get Started</a>
+	{{#extend "title"}}welcome to antler.io{{/extend}}
 	
-	<p class="details">
-		<a href="#detail_content">Details<br/><i class="icon-circle-arrow-down"></i></a>
-	</p>	
-
-		
-		
-</div>
-
-<div id="detail_content" name="detail_content" >
-	<ol>
-		<li>Sign up - we'll only give your email to the people you connect with.</li>
-		<li>Connect with people you meet.</li>
-		<li>Get two digest emails - one that night, one a week later.</li>
-	</ol>
+	<div class="header_bar" style="text-align:center;padding:45px 0;">
+		<img width="40" class="headshot" src="/img/antler-white-logo.svg" /><br/>
+		antler.io
+	</div>
 	
-</div>
+	
+	
+	<div class="intro">
+	
+		<h2>Quickly connect with the people around you & get reminded about it later.</h2>
+	
+		<a class="link_button" href="/login">Get Started</a>
+		
+		<p class="actions">
+			<a href="#detail_content">Details<br/><i class="icon-circle-arrow-down"></i></a>
+		</p>	
+	
+			
+			
+	</div>
+	
+	<div id="detail_content" name="detail_content" >
+		<ol>
+			<li>Sign up - <span class="errors">we'll only give your email to the people you connect with</span>.</li>
+			<li>Connect with people you meet.</li>
+			<li>Get two digest emails - one that night, one a week later.</li>
+		</ol>
+		
+	</div>

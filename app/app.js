@@ -7,7 +7,7 @@ var http = require('http')
   , app = express()
   , routes = require(__dirname + '/lib/routes')
   , sockets = require(__dirname + '/lib/sockets')
-  , server = http.createServer(app).listen(8080, '0.0.0.0', function () {
+  , server = http.createServer(app).listen(8013,function () {
       var addr = server.address();
       console.log('Express server listening on http://' + addr.address + ':' + addr.port);
   })
@@ -19,7 +19,7 @@ var http = require('http')
 
 
 app.configure(function() {
-  app.set('port', process.env.PORT || 8080);
+  app.set('port', process.env.PORT || 8013);
   app.set('view engine', 'html');
   app.engine('html', hbs.__express);
   app.set('views', __dirname + '/../views')

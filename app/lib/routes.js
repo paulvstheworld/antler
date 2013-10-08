@@ -1,7 +1,7 @@
 var fs = require('fs')
   , uuid = require('uuid')
   , Sequelize = require('sequelize')
-  , sequelize = new Sequelize('antler', 'root', null, {
+  , sequelize = new Sequelize('antlerio_antlerdb', 'antlerio_dbadmin', 'Take8a8stab8at8beersDB', {
     dialect: 'mysql',
     host: 'localhost',
     port: 3306,
@@ -130,6 +130,7 @@ module.exports = function(app) {
     var email = req.body.email || '';
     var firstname = req.body.firstname || '';
     var lastinitial = req.body.lastinitial || '';
+    var imgname = uuid.v4() + '.jpg';
 
     var loginValidator = new LoginValidator(email, firstname, lastinitial);
 
@@ -151,10 +152,28 @@ module.exports = function(app) {
       UserModel.find({
         where: {email:email}
       }).success(function(user) {
-        var imgname = uuid.v4() + '.jpg';
+        
         
         fs.readFile(req.files.imgpic.path, function (err, data) {
           var newPath = [__dirname, "/../../static/uploads/", imgname].join('');
+          
+
+			function cropImage(path,size) {
+				var im = require('imagemagick');
+	    		
+				im.crop({
+		    		srcPath: path,
+	                dstPath: path,
+	                width: size,
+	                height: size,
+	                quality: 1,
+	  				gravity: "North",
+	  				filter: 'Blackman',
+				}, function(err, stdout, stderr){
+					if (err) throw err
+					//fs.writeFileSync(path, stdout, 'binary');
+					});
+	  		};
           
           if(data.length > 0) {
             fs.writeFile(newPath, data, function (err) {
@@ -165,6 +184,7 @@ module.exports = function(app) {
                   sessionid: sessionid,
                   image: imgname,
                 }).success(function() {
+                  cropImage(newPath,"50");
                   return res.redirect('/');
                 })
               }
@@ -177,6 +197,7 @@ module.exports = function(app) {
                   sessionid: sessionid,
                   image: imgname,
                 }).success(function() {
+                  cropImage(newPath,"50");
                   return res.redirect('/');
                 })
               }
@@ -207,8 +228,22 @@ module.exports = function(app) {
           }
         }); // end readFile
         
+       
+        
+        
+        
       }); // end success
+      
+      
+      
     } // end else
+    
+    
+       
+    
+    
+    
+    
   }); // end POST
   
 }

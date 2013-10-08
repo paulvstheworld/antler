@@ -4,27 +4,12 @@
 	<link rel='stylesheet' href='/css/style.css'>	
 {{/extend}}
 
-{{#extend "fonts"}}
-	<link href='http://fonts.googleapis.com/css?family=Raleway:800,600,400,300,200' rel='stylesheet' type='text/css'>
-	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-{{/extend}}
 
-	<h1 class="active"><img id="profile" class="headshot" src="/uploads/5d74b471-eda9-4845-8d9e-b8f14e5c14f4.jpg">Oh no {{user.firstname}}!</h1>
-
-
+<h1 class="active"><img id="profile" class="headshot" src="/uploads/{{user.image}}">Oh no {{user.firstname}}!</h1>
 
 <div class="intro">
-
-
-
-	<h2>You've left the room after being idle for 90 seconds.</h2>
-
+	<h2>You've been disconnected automatically after not making any connections in 90 seconds.</h2>
 	<a class="link_button action_button" href="/">Reconnect?</a>
-	
-	
-
-		
-		
 </div>
 
 
