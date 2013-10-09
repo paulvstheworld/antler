@@ -1,13 +1,17 @@
 {{#extend "title"}}Antler{{/extend}}
 
 {{#extend "deferred_scripts"}}
-  <script src="/js/antler/main.js"></script>
   <script>
     var connectionIds = {{connectionIds}};
     var INACTIVE_TIME = {{INACTIVE_TIME}};
     $('.progress-bar')
       .animate({ width: "100%"}, INACTIVE_TIME);
   </script>
+  <script>
+    var socketHost = "{{socket_host}}";
+    var socketPort = "{{socket_port}}";
+  </script>
+  <script src="/js/antler/main.js"></script>
 {{/extend}}
 
 <h1>Hello!</h1>

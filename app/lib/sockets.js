@@ -1,13 +1,13 @@
 var socketio = require('socket.io')
   , cookie = require('cookie')
   , Sequelize = require('sequelize')
-  
+  , config = require(__dirname + '/../config.js')
   
   // database
-  , sequelize = new Sequelize('antlerio_antlerdb', 'antlerio_dbadmin', 'Take8a8stab8at8beersDB', {
-    dialect: 'mysql',
-    host: 'localhost',
-    port: 3306,
+  , sequelize = new Sequelize(config.db.name, config.db.user, config.db.password, {
+    dialect: config.db.dialect,
+    host: config.db.host,
+    port: config.db.port,
     omitNull: true,
     define: {
         freezeTableName: true,
