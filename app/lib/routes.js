@@ -1,10 +1,11 @@
 var fs = require('fs')
   , uuid = require('uuid')
+  , config = require(__dirname + '/../config.js')
   , Sequelize = require('sequelize')
-  , sequelize = new Sequelize('antlerio_antlerdb', 'antlerio_dbadmin', 'Take8a8stab8at8beersDB', {
-    dialect: 'mysql',
-    host: 'localhost',
-    port: 3306,
+  , sequelize = new Sequelize(config.db.name, config.db.user, config.db.password, {
+    dialect: config.db.dialect,
+    host: config.db.host,
+    port: config.db.port,
     omitNull: true,
     define: {
         freezeTableName: true,
@@ -50,6 +51,8 @@ module.exports = function(app) {
               }
               
               return res.render('index', {
+                socket_host: config.socket.host,
+                socket_port: config.socket.port,
                 connectionIds: JSON.stringify(connectionIds),
                 INACTIVE_TIME: JSON.stringify(INACTIVE_TIMEOUT)
               });

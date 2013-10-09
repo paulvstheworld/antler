@@ -2,12 +2,13 @@ var http = require('http')
   , express = require('express')
   , hbs = require('hbs')
   , cookie = require('cookie')
+  , config = require(__dirname + '/config.js')
   
   // servers
   , app = express()
   , routes = require(__dirname + '/lib/routes')
   , sockets = require(__dirname + '/lib/sockets')
-  , server = http.createServer(app).listen(8013,function () {
+  , server = http.createServer(app).listen(config.app.port, config.app.host,function () {
       var addr = server.address();
       console.log('Express server listening on http://' + addr.address + ':' + addr.port);
   })
@@ -16,10 +17,10 @@ var http = require('http')
   , templateHelpers = require(__dirname + '/lib/helpers/template.js')
 
 
-
+console.log(config);
 
 app.configure(function() {
-  app.set('port', process.env.PORT || 8013);
+  app.set('port', config.app.port);
   app.set('view engine', 'html');
   app.engine('html', hbs.__express);
   app.set('views', __dirname + '/../views')
