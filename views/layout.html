@@ -4,21 +4,24 @@
 	  <title>{{{block "title"}}}</title>
 	
 	  	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	  	<meta name="apple-mobile-web-app-capable" content="yes">
 	  	
-	  	<link rel="stylesheet" href="/css/bootstrap.css">
+	  	<!--link rel="stylesheet" href="/css/bootstrap.css"-->
+	  	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 	  	<link rel='stylesheet' href='/css/style.css'>
+	  	<link href='http://fonts.googleapis.com/css?family=Raleway:800,600,400,300,200' rel='stylesheet' type='text/css'>
+		<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+		{{{block "fonts"}}}
 		{{{block "stylesheets"}}}
 		
 		<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-		<script src="/js/bootstrap.js"></script>
+		<!--script src="/js/bootstrap.js"></script-->
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 		<script src="/js/socket.io/socket.io.js"></script>
 		<script src="/js/plugins/jquery-cookie.js"></script>
 		{{{block "scripts"}}}
 		
-		<link href='http://fonts.googleapis.com/css?family=Raleway:800,600,400,300,200' rel='stylesheet' type='text/css'>
 		
-		<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-		{{{block "fonts"}}}
 		
 	</head>
 

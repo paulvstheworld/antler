@@ -28,6 +28,10 @@
     removeGuestContainerClasses($guestContainer);
     $guestContainer.addClass('alert-success');
     $guestContainer.addClass('connected');
+    
+    var markup = '<span><i class="icon-check-sign"></i></span>';
+      
+    $guestContainer.append(markup);
   }
   
   var setGuestRequested = function(id, connectionId) {
@@ -71,8 +75,10 @@
     var markup = ['<li class="guest alert-info guest_connect_item" data-userid="', data.id, '">', 
       headshot,
       guestName, 
-      '<button class="guest_connect_button" type="button">Connect</button>',
-      '<button class="guest_confirm_button" type="button">Accept</button>',
+//      '<button class="guest_connect_button" type="button">Connect</button>',
+      '<a class="link_button guest_connect_button connect_button">Connect</a>',
+//      '<button class="guest_confirm_button" type="button">Accept Connection</button>',
+      '<a class="link_button guest_confirm_button connect_button">Yes, connect!</a>',
 //      '<span class="check">&#x2713;</span>',
       '</li>'].join('');
     

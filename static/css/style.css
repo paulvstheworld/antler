@@ -25,6 +25,11 @@ a:hover, a:visited{
 ol,form{
 	text-align: left;
 	}
+	
+ul {
+	list-style-type:none;
+	padding:0;
+	}
 
 /* == hx ==*/
 
@@ -65,7 +70,7 @@ h2{
 	padding:1em 0;
 	}
 
-/* == people ==*/
+/* == HEADER ==*/
 
 .header_bar{
 	background-color:#515151;
@@ -76,69 +81,23 @@ h2{
 	text-align:left;
 	}
 	
-li{
-	padding:.7em .6em;
-	}
 
 /* == people ==*/
+
+#guests li{
+	padding:.7em .6em;
+	text-align: left;
+	font:600 1.4em/.8em "Raleway";
+	margin:0;
+	padding:.4em 0;
+	color:#515151;
+	}
 
 .headshot{
 	width: 50px;
 	height:50px;
 	border-radius: 25px;
 	margin:0 .4em;
-	}
-
-
-/* == content ==*/
-
-.actions{
-	font:600 1.2em/1.2em "Raleway";
-	margin:40px auto;
-	}
-	
-.link_button{
-	font:600 1.2em/.8em "Raleway";
-	background-color:rgba(33,194,244,1);
-	border-radius:5px;
-	padding:.7em .8em .7em;
-	margin:2.5em auto;
-	border:none;
-	color:#fff;
-	text-align:center;
-	display:block;
-	width:8em;
-	}
-	
-button{
-	background-color:rgba(168,204,17,1);
-	}
-
-
-#detail_content{
-	font:600 1.2em/1.2em "Raleway";
-	margin:6em 0 0;
-	padding:2em 0;
-	border-top:1px solid #a1a1a1;
-	}
-
-
-/* == forms ==*/
-
-.error{
-	color:#B42F30;
-	}
-	
-.error_field{
-	background-color:rgba(180,47,48,.1)
-	}
-
-
-/* == cleaned above ====================================================
-
-
-.guest {
-	border-radius: 5px;
 	}
 
 .guest .guest_connect_button,
@@ -161,65 +120,118 @@ button{
 .guest.connected .check {
 	display: inline-block;
 	}
-
-
-
-button {
-  margin-left:20px;
-}
-
-
-ul {
-  list-style-type:none;
-  padding:0;
-}
-li {
-
-}
-
-
-
-
-
-.guest {
-  border-radius: 5px;
-}
-
-.guest .guest_connect_button,
-.guest.confirm .guest_confirm_button {
+	
+.alert-info {
+	color: #515151;
+	background-color: #efefef;
+	border-color: #aaa;
+	}
+	
+.alert-warning {
+	color: #c09853;
+	background-color:rgba(33,194,244,.1);
+	border-color: #aaa;
+	}
+	
+.alert-success {
+	color: #468847;
+	background-color: #dff0d8;
+	border-color: #d6e9c6;
+	}
+	
+.guest.connected span{
 	display: inline-block; 
 	float:right;
-}
-
-.guest.confirm .guest_connect_button,
-.guest .guest_confirm_button,
-.guest_connected {
-  display: none;
-}
-
-.guest.connected .guest_connect_button,
-.guest.connected .guest_confirm_button {
-  display:none;
-}
-
-.guest.connected .check {
-  display: inline-block;
+	color:rgba(168,204,17,1);
+	padding:.5em .8em;
+	font-size: 1.5em;
 }
 
 
+/* == content ==*/
 
-#profile {
-  width: 50px;
-  height:50px;
-  border-radius: 25px;
-}
-
-.headshot{
-	width: 50px;
-	height:50px;
-	border-radius: 25px;
-	margin:0 .4em;
+.actions{
+	font:600 1.2em/1.2em "Raleway";
+	margin:40px auto;
 	}
+	
+.link_button{
+	font:600 1.2em/.8em "Raleway";
+	background-color:rgba(33,194,244,1);
+	border-radius:5px;
+	padding:.7em .8em .7em;
+	margin:1.5em auto;
+	border:none;
+	color:#fff;
+	text-align:center;
+	display:inline-block;
+	}
+	
+.link_button:hover,.link_button:active{
+	background-color:rgba(33,194,244,1);
+	color:#fff;
+	}
+	
+.connect_button{
+	background-color:rgba(168,204,17,1);
+	margin:.6em .5em 0 0;
+	display:inline-block;
+	}
+	
+#guests .connect_button{
+	font-size: .9em;
+	}
+
+
+#detail_content{
+	font:600 1.2em/1.2em "Raleway";
+	margin:6em 0 0;
+	padding:2em 0;
+	border-top:1px solid #a1a1a1;
+	}
+
+.progress {
+	height: 5px;
+	margin-bottom:0px;
+	overflow: hidden;
+	background-color: #f5f5f5;
+	border-radius: 0;
+	-webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+	}
+
+.progress-bar {
+	float: left;
+	width: 0;
+	height: 100%;
+	font-size: 12px;
+	color: #ffffff;
+	text-align: center;
+	background-color: #428bca;
+	-webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+	box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+	-webkit-transition: width 0.6s ease;
+	transition: width 0.6s ease;
+	}
+
+.progress-bar-danger {
+	background-color: #d9534f;
+	}
+
+/* == forms ==*/
+
+.error{
+	color:#B42F30;
+	}
+	
+.error_field{
+	background-color:rgba(180,47,48,.1)
+	}
+
+
+/* == cleaned above ====================================================
+
+
 
 /* == ak added ====================================================
 
@@ -303,31 +315,6 @@ hr{
 
 
 
-
-.progress {
-height: 5px;
-margin-bottom:0px;
-overflow: hidden;
-background-color: #f5f5f5;
-border-radius: 0;
--webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-
-.progress-bar {
-float: left;
-width: 0;
-height: 100%;
-font-size: 12px;
-color: #ffffff;
-text-align: center;
-background-color: #428bca;
--webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
--webkit-transition: width 0.6s ease;
-transition: width 0.6s ease;
-}
 
 .progress-bar-danger {
 	background-color: #d9534f;

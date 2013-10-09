@@ -112,7 +112,9 @@ module.exports = function(app) {
         .success(function(userModel) {
           if(userModel) {
             // render reconnect with user data
-            res.render('reconnect', {user: userModel.dataValues});
+            res.render('reconnect', {user: userModel.dataValues,INACTIVE_TIME: JSON.stringify(INACTIVE_TIMEOUT)});
+            
+            
           }
           else {
             return res.render('login', { errors: JSON.stringify([])});
@@ -123,7 +125,46 @@ module.exports = function(app) {
       return res.render('login', { errors: JSON.stringify([])});
     }
   });
-
+  
+  /*
+  
+  to show all maybe?
+  
+  app.get('/my_connections', function(req, res) {
+    var sessionid = sessionHelpers.getSessionId(req);
+    if(sessionid) {
+      UserModel.find({ where: { sessionid: sessionid}})
+        .success(function(user) {
+          if(user) {
+            ConnectionModel.findAll({where:[
+              '(user_src_id=? OR user_dest_id=?) AND connected=true',
+              user.id, user.id
+            ]}).success(function(connections) {
+              var connectionIds = [];
+              var otherUser = null;
+              
+              for(var i=0, len=connections.length; i<len; i++) {
+                otherUserID = (user.id === connections[i].user_src_id) ? 
+                    connections[i].user_dest_id : connections[i].user_src_id; 
+                connectionIds.push(otherUserID);
+              }
+              
+              return res.render('index', {
+                connectionIds: JSON.stringify(connectionIds),
+                INACTIVE_TIME: JSON.stringify(INACTIVE_TIMEOUT)
+              });
+            });
+          }
+          else {
+            return res.render('login', { errors: JSON.stringify([])});
+          }
+        });
+    }
+    else {
+      return res.render('login', { errors: JSON.stringify([])});
+    }
+  });
+*/
   
   app.post('/login', function(req, res) {
     var sessionid = null;
@@ -169,10 +210,12 @@ module.exports = function(app) {
 	                quality: 1,
 	  				gravity: "North",
 	  				filter: 'Blackman',
+	  				//customArgs: ['-setImageOrientation', '1'],
 				}, function(err, stdout, stderr){
 					if (err) throw err
 					//fs.writeFileSync(path, stdout, 'binary');
 					});
+					
 	  		};
           
           if(data.length > 0) {
@@ -184,7 +227,7 @@ module.exports = function(app) {
                   sessionid: sessionid,
                   image: imgname,
                 }).success(function() {
-                  cropImage(newPath,"50");
+                  cropImage(newPath,"100");
                   return res.redirect('/');
                 })
               }
@@ -197,7 +240,7 @@ module.exports = function(app) {
                   sessionid: sessionid,
                   image: imgname,
                 }).success(function() {
-                  cropImage(newPath,"50");
+                  cropImage(newPath,"100");
                   return res.redirect('/');
                 })
               }

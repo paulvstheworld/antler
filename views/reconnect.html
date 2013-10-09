@@ -4,12 +4,21 @@
 	<link rel='stylesheet' href='/css/style.css'>	
 {{/extend}}
 
+{{#extend "deferred_scripts"}}
+  <script>
+    var INACTIVE_TIME = {{INACTIVE_TIME}}/1000;
+    $('#time').append(INACTIVE_TIME);
+  </script>
+{{/extend}}
 
-<h1 class="active"><img id="profile" class="headshot" src="/uploads/{{user.image}}">Oh no {{user.firstname}}!</h1>
+
+<h1 class="active"><img id="profile" class="headshot" src="/uploads/{{user.image}}">{{user.firstname}}</h1>
 
 <div class="intro">
-	<h2>You've been disconnected automatically after not making any connections in 90 seconds.</h2>
-	<a class="link_button action_button" href="/">Reconnect?</a>
+	<h2>You've been automatically disconnected after <span id="time"></span> seconds.</h2>
+	<a class="link_button" href="/">Reconnect?</a>
+	
+	<p><br/>antler.io wants to make sure you make timely connections, go hang out in meatspace!</p>
 </div>
 
 

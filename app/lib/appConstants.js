@@ -1,1 +1,1 @@
-module.exports.INACTIVE_TIMEOUT = 1000 * 90;
+module.exports.INACTIVE_TIMEOUT = 1000 * 60;
