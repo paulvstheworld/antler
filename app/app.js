@@ -16,9 +16,6 @@ var http = require('http')
   // helpers
   , templateHelpers = require(__dirname + '/lib/helpers/template.js')
 
-
-console.log(config);
-
 app.configure(function() {
   app.set('port', config.app.port);
   app.set('view engine', 'html');
