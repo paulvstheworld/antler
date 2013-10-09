@@ -60,7 +60,7 @@ else {
   config.app.host = '0.0.0.0';
   config.app.port = 8013;
   
-  config.socket.host = 'localhost';
+  config.socket.host = 'antler.io';
   config.socket.port = 8013
   
   config.db.dialect = 'mysql';
