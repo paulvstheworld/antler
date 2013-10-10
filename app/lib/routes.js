@@ -86,6 +86,25 @@ module.exports = function(app) {
       return res.render('intro', { errors: JSON.stringify([])});
     }
   });
+  
+  
+  app.get('/about', function(req, res) {
+    var sessionid = sessionHelpers.getSessionId(req);
+    if(sessionid) {
+     UserModel.find({ where: { sessionid: sessionid}})
+        .success(function(user) {
+          if(user) {
+            return res.render('about', { user_in: 'true' });
+          }
+          else {
+            return res.render('about', { user_in: 'false' });
+          }
+        });
+    }
+    else {
+      return res.render('about', { user_in: 'false' });
+    }
+  });
 
   
   app.get('/login', function(req, res) {
@@ -129,9 +148,9 @@ module.exports = function(app) {
     }
   });
   
-  /*
   
-  to show all maybe?
+  
+/*  to show all maybe?
   
   app.get('/my_connections', function(req, res) {
     var sessionid = sessionHelpers.getSessionId(req);
@@ -152,7 +171,7 @@ module.exports = function(app) {
                 connectionIds.push(otherUserID);
               }
               
-              return res.render('index', {
+              return res.render('my_connections', {
                 connectionIds: JSON.stringify(connectionIds),
                 INACTIVE_TIME: JSON.stringify(INACTIVE_TIMEOUT)
               });
@@ -201,7 +220,7 @@ module.exports = function(app) {
         fs.readFile(req.files.imgpic.path, function (err, data) {
           var newPath = [__dirname, "/../../static/uploads/", imgname].join('');
           
-
+/*
 			function cropImage(path,size) {
 				var im = require('imagemagick');
 	    		
@@ -213,14 +232,65 @@ module.exports = function(app) {
 	                quality: 1,
 	  				gravity: "North",
 	  				filter: 'Blackman',
-	  				//customArgs: ['-setImageOrientation', '1'],
+	  				customArgs: ['-auto-orient', true],
 				}, function(err, stdout, stderr){
 					if (err) throw err
 					//fs.writeFileSync(path, stdout, 'binary');
 					});
 					
 	  		};
-          
+ */    	  		
+
+
+			function cropImage(path,size) {
+				var gm = require('gm').subClass({ imageMagick: true });				
+	    		
+	    		
+	    		
+	    		img = gm(path);
+
+	    		
+	    		img.autoOrient().write(path,function(){
+		    		img = gm(path);
+					img.size(function(err, value){
+
+					if(value.width > value.height){
+						var newHeight = 100;
+						var newWidth = null;
+						var cropOffsetX = Math.round(( value.width / (value.height/100) )/2 - 50 );
+						var cropOffsetY = 0;
+					} else {
+						var newHeight = null;
+						var newWidth = 100;
+						var cropOffsetX = 0;
+						var cropOffsetY = Math.round( (value.height / (value.width/100))/2 - 50);
+
+					}
+
+					console.log(cropOffsetX);
+					console.log(cropOffsetY);
+
+					img.gravity("Center")
+						.resize(newWidth, newHeight)
+						.write(path, function (err) {
+					  			if (err) throw err
+							img
+								.crop(100,100,cropOffsetX,cropOffsetY)
+								.write(path, function (err) {
+						  			if (err) throw err
+							});
+	
+					});
+	
+
+
+				})
+				})
+	    		
+				
+					
+	  		};
+
           if(data.length > 0) {
             fs.writeFile(newPath, data, function (err) {
               if(user) {
@@ -261,12 +331,15 @@ module.exports = function(app) {
             }
             // add user to DB
             else {
+            
+            	var rando=Math.floor(Math.random()*6)
+            
               UserModel.create({
                 email: email,
                 firstname: firstname,
                 lastname: lastinitial,
                 sessionid: sessionid,
-                image: '',
+                image: 'a'+rando+'.jpg',
               }).success(function() {
                 return res.redirect('/');
               })

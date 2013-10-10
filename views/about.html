@@ -1,0 +1,60 @@
+	  {{#extend "title"}}about antler.io{{/extend}}
+	
+	  {{#extend "deferred_scripts"}}
+	  <script>
+	    var user_in = "{{user_in}}";
+	    
+	    if(user_in=="true"){
+	    	$('#action-ho').html('<a class="link_button" href="/">Return to Connections</a>');
+	    }else{
+	    	$('#action-ho').html('<a class="link_button" href="/login">Get Started</a>');
+	    }
+	    
+	  </script>
+	{{/extend}}
+	
+	<div class="header_bar" style="text-align:center;padding:45px 0;">
+		<img width="40" class="headshot" src="/img/antler-white-logo.svg" /><br/>
+		antler.io
+	</div>
+	
+	
+	
+	<div class="intro">
+		
+			<h2>What is antler.io?</h2>
+			<p>A small reminder app that allows you to connect with the people around you without immediately exchanging details.</p>
+			
+			<h2>How does antler.io work?</h2>
+			<ol>
+				<li><a href="/login">Sign up with your email</a>.</li>
+				<li>Quickly connect with people.</li>
+				<li>Get two digest emails - that night and a week later.</li>
+			</ol>
+			
+			<h2>Why antler.io?</h2>
+			<p>Meetups & conferences are hectic. You run out of business cards, are late for the next session, get over-stimulated and forget all the cool cats you met that day. Antler.io will remind you, via digest email, the day you met somebody and a week after that. <br>And then? Never again, that's it.</p>
+			
+			<h2>Where is my list of connections?</h2>
+			<p>We'll send this to you in an email (two in fact). Antler is intentionally simple online - there are no likes or followers, just a connect & confirm button.</p>
+			
+			<h2>What about privacy?</h2>
+			<p>If you sign up and connect with a fellow user, we will send them your email address. Everybody else can see your avatar, first name & last initial.</p>
+			
+			<p>We may send you an email or two about the service.</p>
+			
+			
+			
+			<h2>What else?</h2>
+			<p>Well, if you must know, antler.io is still a wee fawn. There's no location authentication (your buddy in Kuala Lumpur can connect with you) and there are plenty of other issues.</p>
+			
+			<h2>Who made it?</h2>
+			<p>With the support of <a href="http://pointpath.co">Pointpath Studios</a>: <a href="#">Paul Wang</a>, <a href="#">Mike Acreman</a> & <a href="http://allisterk.com">Allister Klingensmith</a>.</p>
+			
+			<div id="action-ho"></div>
+		
+			
+			
+	</div>
+	
+	

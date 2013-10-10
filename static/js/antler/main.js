@@ -48,7 +48,8 @@
   
   socket.on('user.active', function (data) {
 	var my_title = ['Hi ', data.firstname].join('');
-    var headshot = ['<img id="profile" class="headshot" src="/uploads/'+ data.image +'" />'].join('');
+    var headshot = ['<img id="profile" class="headshot" width="50" height="50" src="/uploads/'+ data.image +'" />'].join('');
+    var timer = '<div class="timer"></div>';
     userData = data;
     isUserActive = true;
     
@@ -56,7 +57,7 @@
     console.log(data);
     
     $h1
-      .html(headshot + my_title)
+      .html(headshot + my_title + timer)
       .addClass('active');
   });
   
@@ -71,7 +72,7 @@
   
   socket.on('guest.active', function(data) {
     var guestName = [data.firstname, ' ', data.lastname].join('');
-    var headshot = ['<img class="headshot" src="/uploads/',data.image,'"/>'].join('');
+    var headshot = ['<img class="headshot"  width="50" height="50" src="/uploads/',data.image,'"/>'].join('');
 	var $guest = $guests.find('[data-userid="' + data.id + '"]');
     var markup = ['<li class="guest alert-info guest_connect_item" data-userid="', data.id, '">', 
       headshot,

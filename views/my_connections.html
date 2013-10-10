@@ -4,30 +4,12 @@
   <script>
     var connectionIds = {{connectionIds}};
     var INACTIVE_TIME = {{INACTIVE_TIME}};
-    //$('.progress-bar')
-    //  .animate({ width: "100%"}, INACTIVE_TIME);
+    $('.progress-bar')
+      .animate({ width: "100%"}, INACTIVE_TIME);
   </script>
   <script>
     var socketHost = "{{socket_host}}";
     var socketPort = "{{socket_port}}";
-    
-    var count = {{INACTIVE_TIME}}/1000;
-    var counter = setInterval(timer, 1000);
-   
-    function timer(){
-        count=count-1;
-        if (count <= 0) {
-            clearInterval(counter);
-            return;
-        }
-        if (count <= 5) { $(".timer").css("color","red"); }
-
-        $(".timer").html(count);
-    }
-    
-    timer();
-    
-    
   </script>
   <script src="/js/antler/main.js"></script>
 {{/extend}}
@@ -43,5 +25,5 @@
 
 <div id="lonelyMessage">
   	<h2>Nobody is around right now.</h2>
-  	<h2>Go meet people!</h2>
+  	<h2>Meet someone new & send them to http://antler.io</h2>
 </div>

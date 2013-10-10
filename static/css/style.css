@@ -10,7 +10,7 @@ you cheeky bastid.
 
 body{
 	background-color: #efefef;
-	font:400 1.2em/1.2em "Raleway";
+	font:600 1.2em/1.2em "Raleway";
 	text-align:center;
 	}
 
@@ -52,6 +52,16 @@ h2{
 	margin:1.3em 0;
 	padding:.3em 0;
 	text-align:center;
+	}
+	
+.intro h2{
+	margin:1em 0 0em;
+	}
+	
+.intro p, .intro li{
+	line-height: 1.5em;
+	font-size: 1.2em;
+	color:#666;
 	}
 
 /* == structure ==*/
@@ -101,7 +111,7 @@ h2{
 	width: 50px;
 	height:50px;
 	border-radius: 25px;
-	margin:0 .4em;
+	margin:0 12px;
 	}
 
 .guest .guest_connect_button,
@@ -194,8 +204,14 @@ h2{
 	border-top:1px solid #a1a1a1;
 	}
 
+.timer{
+	float:right;
+	font:600 .6em/1.2em "Raleway";
+	padding:1.2em 1em 0 0;
+	}
+
 .progress {
-	height: 5px;
+	height: 2px;
 	margin-bottom:0px;
 	overflow: hidden;
 	background-color: #f5f5f5;
@@ -231,109 +247,3 @@ h2{
 .error_field{
 	background-color:rgba(180,47,48,.1)
 	}
-
-
-/* == cleaned above ====================================================
-
-
-
-/* == ak added ====================================================
-
-
-	
-.intro{
-	width:100%;	
-	padding:0 5%;
-	
-}
-	
-
-	
-.header_bar{
-	background-color:#515151;
-	color:#fff;
-	font:600 1.5em/.8em "Raleway";
-	margin:0;
-	padding:.4em 0;
-	text-align:left;
-	}
-
-.intro h1{
-	color:#222;
-	font:600 2.5em/.8em "Raleway";
-	margin:0;
-	padding:.4em 0;
-	text-align:left;
-	}	
-	
-
-		
-		
-
-button,
-
-h1 button,li .link_button{
-	font:600 .6em/.8em "Raleway";
-}
-
-
-
-button.guest_connect_button, button.guest_confirm_button, .header_bar .action_button{
-	float:right;
-	margin:.4em .6em 0 0;
-}
-
-.headshot{
-	width: 50px;
-	height:50px;
-	border-radius: 25px;
-	margin:0 .4em;
-	}
-	
-.alert-info {
-	color: #515151;
-	background-color: #efefef;
-	border-color: #aaa;
-	}
-	
-.alert-warning {
-	color: #c09853;
-	background-color:rgba(33,194,244,.1);
-	border-color: #aaa;
-	}
-	
-.alert-success {
-	color: #468847;
-	background-color: #dff0d8;
-	border-color: #d6e9c6;
-	}
-
-	
-
-hr{
-	border-top:1px solid #a1a1a1;
-	
-}
-
-
-
-
-
-
-.progress-bar-danger {
-	background-color: #d9534f;
-}
-
-#errors{
-	color:#B42F30;
-	}
-
-.error_field{
-	background-color:rgba(180,47,48,.1)
-	}
-	
-/*------------------------------
-
-.hide{
-  display:none;
-}
